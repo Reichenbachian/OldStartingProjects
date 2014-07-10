@@ -1,0 +1,97 @@
+int calculateScore(string letters, int position[], int blanks[], bool upanddown){
+
+	int xpos = position[0];
+	int ypos = position[1];
+	//tileValueArray
+	int valueArray[26] = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
+	//create point Board
+
+	int pointArray[15][15] =
+	{
+			{33,1,1,2,1,1,1,33,1,1,1,2,1,1,33},
+			{1,22,1,1,1,3,1,1,1,3,1,1,1,22,1},
+			{1,1,22,1,1,1,2,1,2,1,1,1,22,1,1},
+			{2,1,1,22,1,1,1,2,1,1,1,22,1,1,2},
+			{1,1,1,1,22,1,1,1,1,1,22,1,1,1,1},
+			{1,3,1,1,1,3,1,1,1,3,1,1,1,3,1},
+			{1,1,2,1,1,1,2,1,2,1,1,1,2,1,1},
+			{33,1,1,2,1,1,1,22,1,1,1,2,1,1,33},
+			{1,1,2,1,1,1,2,1,2,1,1,1,2,1,1},
+			{1,3,1,1,1,3,1,1,1,3,1,1,1,3,1},
+			{1,1,1,1,22,1,1,1,1,1,22,1,1,1,1},
+			{2,1,1,22,1,1,1,2,1,1,1,22,1,1,2},
+			{1,1,22,1,1,1,2,1,2,1,1,1,22,1,1},
+			{1,22,1,1,1,3,1,1,1,3,1,1,1,22,1},
+			{33,1,1,2,1,1,1,33,1,1,1,2,1,1,33},
+	};
+	int totalPoints = 0;
+	vector<int>multiplierVector;
+	if(blanks[0] == 0){
+		if(upanddown == true){
+			for(int i = 0; i < letters.length(); i++){
+					if(pointArray[xpos][ypos+i] == 1){
+						totalPoints += valueArray[letters[i]-97];
+					}
+					else if(pointArray[xpos-1][ypos+i-1] == 2){
+						totalPoints = valueArray[letters[i]-97]*2 + totalPoints;
+					}
+					else if(pointArray[xpos-1][ypos+i-1] == 3){
+						totalPoints = valueArray[letters[i]-97]*3 + totalPoints;
+					}
+					else if(pointArray[xpos-1][ypos+i-1] == 22){
+						multiplierVector.push_back(22);
+					}
+					else if(pointArray[xpos-1][ypos+i-1] == 33){
+						multiplierVector.push_back(33);
+					}
+
+				}
+		  }
+		else{
+			  for(int i = 0; i < letters.length(); i++){
+					if(pointArray[xpos+i-1][ypos-1] == 1){
+						totalPoints += valueArray[letters[i]-97];
+					}
+					else if(pointArray[xpos+i-1][ypos-1] == 2){
+						totalPoints = valueArray[letters[i]-97]*2 + totalPoints;
+					}
+					else if(pointArray[xpos+i-1][ypos-1] == 3){
+						totalPoints = valueArray[letters[i]-97]*3 + totalPoints;
+					}
+					else if(pointArray[xpos+i-1][ypos-1] == 22){
+						multiplierVector.push_back(22);
+						totalPoints = valueArray[letters[i]-97] + totalPoints;
+					}
+					else if(pointArray[xpos+i-1][ypos-1] == 33){
+						multiplierVector.push_back(33);
+						totalPoints = valueArray[letters[i]-97] + totalPoints;
+					}
+
+
+			  	}
+		}
+		if(multiplierVector.size() !=0){
+			if(multiplierVector.size() == 1){
+				if(multiplierVector[0] == 22){
+					totalPoints = totalPoints*2;
+				}
+				else if(multiplierVector[0] == 33){
+					totalPoints = totalPoints*3;
+				}
+			}
+			else if(multiplierVector.size() == 2){
+				int points = totalPoints;
+				if(multiplierVector[0] == 22){
+					points = totalPoints*2;
+					totalPoints = totalPoints * 2 + points;
+				}
+				else if(multiplierVector[0] == 33){
+					points = totalPoints*3;
+					totalPoints = totalPoints * 3 + points;
+				}
+			}
+		}
+	}
+
+	return totalPoints;
+}
