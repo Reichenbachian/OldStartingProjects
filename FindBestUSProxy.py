@@ -27,18 +27,23 @@ def check_proxy(proxy):
 		urllib2.install_opener(opener)
 		urllib2.urlopen('http://www.google.com', timeout=timeout)
 		print "\tAlive"
+		return True
 	except(IOError), msg:
 		print "\t[-] Dead: ", msg
+		return False
 
 def checkProxies():
 	for proxy in proxyList:
 		if proxy != "" or proxy != "\n":
 			print "##### Testing: ", proxy
 			startTime = timeit.default_timer()
-			check_proxy(proxy)
+			success=check_proxy(proxy)
 			endTime = timeit.default_timer()
-			print "Response time: " + str(endTime-startTime)
-			time.append(endTime-startTime)
+			if success:
+				print "Response time: " + str(endTime-startTime)
+				time.append(endTime-startTime)
+			else:
+				time.append(1000)
 
 def printFastest():
 	index=0
